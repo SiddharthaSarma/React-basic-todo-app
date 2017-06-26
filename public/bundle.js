@@ -63,8 +63,6 @@
 
 	'use strict';
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(159);
 	var uuidv1 = __webpack_require__(160);
@@ -90,11 +88,11 @@
 	  },
 	  handleAddTodo: function handleAddTodo(text) {
 	    this.setState({
-	      todos: [].concat(_toConsumableArray(this.state.todos), [{
+	      todos: [].concat(this.state.todos, {
 	        id: uuidv1(),
 	        text: text,
 	        completed: false
-	      }])
+	      })
 	    });
 	  },
 	  handleOnToggleTodo: function handleOnToggleTodo(id) {
@@ -115,11 +113,9 @@
 	    });
 	  },
 	  render: function render() {
-	    var _state = this.state,
-	        todos = _state.todos,
-	        showCompleted = _state.showCompleted,
-	        searchTerm = _state.searchTerm;
-
+	    var todos = this.state.todos;
+	    var showCompleted = this.state.showCompleted;
+	    var searchTerm = this.state.searchTerm;
 	    var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchTerm);
 	    return React.createElement(
 	      'div',
@@ -20057,10 +20053,8 @@
 		displayName: 'TodoList',
 
 		render: function render() {
-			var _props = this.props,
-			    todos = _props.todos,
-			    onToggle = _props.onToggle;
-
+			var todos = this.props.todos;
+			var onToggle = this.props.onToggle;
 			var renderTodos = function renderTodos() {
 				return todos.map(function (todo) {
 					return React.createElement(Todo, _extends({ key: todo.id }, todo, { onToggleTodo: onToggle }));
@@ -20090,12 +20084,10 @@
 		render: function render() {
 			var _this = this;
 
-			var _props = this.props,
-			    id = _props.id,
-			    text = _props.text,
-			    completed = _props.completed,
-			    onToggleTodo = _props.onToggleTodo;
-
+			var id = this.props.id;
+			var text = this.props.text;
+			var completed = this.props.completed;
+			var onToggleTodo = this.props.onToggleTodo;
 			return React.createElement(
 				"div",
 				{ id: id, onClick: function onClick() {
@@ -20121,10 +20113,8 @@
 	  displayName: "SearchTodo",
 
 	  searchTodo: function searchTodo() {
-	    var _refs = this.refs,
-	        searchTerm = _refs.searchTerm,
-	        showCompleted = _refs.showCompleted;
-
+	    var searchTerm = this.refs.searchTerm;
+	    var showCompleted = this.refs.showCompleted;
 	    this.props.onSearchTodo(searchTerm.value, showCompleted.checked);
 	  },
 	  render: function render() {
@@ -20145,40 +20135,40 @@
 /***/ (function(module, exports) {
 
 	module.exports = {
-		getTodos: function() {
-			var data = localStorage.getItem('todos');
+	  getTodos: function () {
+	    var data = localStorage.getItem('todos');
 	    var todos = [];
-			try {
-				todos = JSON.parse(data);
-			} catch(e) {
-				console.error(e);
-			}
+	    try {
+	      todos = JSON.parse(data);
+	    } catch (e) {
+	      console.error(e);
+	    }
 
-			if(Array.isArray(todos)) {
-				return todos;
-			} else {
-				return [];
-			}
-		},
-		setTodos: function(todos) {
-			if(Array.isArray(todos)) {
-				var data = JSON.stringify(todos);
-				localStorage.setItem('todos', data);
-			} 
-		},
-	  filterTodos : function(todos, showCompleted, searchText) {
+	    if (Array.isArray(todos)) {
+	      return todos;
+	    } else {
+	      return [];
+	    }
+	  },
+	  setTodos: function (todos) {
+	    if (Array.isArray(todos)) {
+	      var data = JSON.stringify(todos);
+	      localStorage.setItem('todos', data);
+	    }
+	  },
+	  filterTodos: function (todos, showCompleted, searchText) {
 	    var filteredTodos = todos;
 
-	    filteredTodos = todos.filter((todo) => {
+	    filteredTodos = todos.filter(function (todo) {
 	      return !todo.completed || showCompleted;
 	    });
 
-	    filteredTodos = filteredTodos.filter((todo) => {
+	    filteredTodos = filteredTodos.filter(function (todo) {
 	      var text = todo.text.toLowerCase();
 	      return searchText.length === 0 || text.indexOf(searchText) > -1;
 	    });
 
-	    filteredTodos.sort((a, b) => {
+	    filteredTodos.sort(function (a, b) {
 	      if (!a.completed && b.completed) {
 	        return -1;
 	      } else if (a.completed && !b.completed) {

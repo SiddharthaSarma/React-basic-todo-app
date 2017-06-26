@@ -9,30 +9,29 @@ var SearchTodo = require('./SearchTodo.jsx');
 var TodoAPI = require('../../api/TodoAPI.js')
 
 var TodoApp = React.createClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       showCompleted: false,
       searchTerm: '',
       todos: TodoAPI.getTodos()
     }
   },
-  componentDidUpdate: function() {
+  componentDidUpdate: function () {
     TodoAPI.setTodos(this.state.todos);
   },
-  handleAddTodo: function(text) {
+  handleAddTodo: function (text) {
     this.setState({
-      todos :[
-        ...this.state.todos,
+      todos: [].concat(
+        this.state.todos,
         {
           id: uuidv1(),
           text: text,
           completed: false
-        }
-      ]
+        })
     });
   },
-  handleOnToggleTodo: function(id) {
-    var updatedTodos = this.state.todos.map((todo) => {
+  handleOnToggleTodo: function (id) {
+    var updatedTodos = this.state.todos.map(function (todo) {
       if (todo.id === id) {
         todo.completed = !todo.completed;
       }
@@ -42,23 +41,25 @@ var TodoApp = React.createClass({
       todos: updatedTodos
     });
   },
-  handleSearchTodo: function(searchTerm, showCompleted) {
+  handleSearchTodo: function (searchTerm, showCompleted) {
     this.setState({
       showCompleted: showCompleted,
-      searchTerm : searchTerm
+      searchTerm: searchTerm
     });
   },
-	render: function() {
-    var {todos, showCompleted, searchTerm} = this.state;
+  render: function () {
+    var todos = this.state.todos;
+    var showCompleted = this.state.showCompleted;
+    var searchTerm = this.state.searchTerm;
     var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchTerm);
-		return (
-			<div className="container">
-        <SearchTodo onSearchTodo={this.handleSearchTodo}/>
-        <TodoList todos={filteredTodos} onToggle={this.handleOnToggleTodo}/>
-        <AddTodo addTodo={this.handleAddTodo}/>
-			</div>
-		);
-	}
+    return (
+      <div className="container">
+        <SearchTodo onSearchTodo={this.handleSearchTodo} />
+        <TodoList todos={filteredTodos} onToggle={this.handleOnToggleTodo} />
+        <AddTodo addTodo={this.handleAddTodo} />
+      </div>
+    );
+  }
 });
 
 module.exports = TodoApp;
